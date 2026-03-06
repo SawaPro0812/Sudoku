@@ -1,4 +1,4 @@
-import { type Board, isValid, solve, countSolutions, copyBoard } from './solver';
+import { type Board, isValid, countSolutions, copyBoard } from './solver';
 
 export type Difficulty = 'easy' | 'medium' | 'hard';
 
