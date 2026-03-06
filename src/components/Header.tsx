@@ -1,4 +1,4 @@
-import { Clock, RotateCcw, XCircle, Lightbulb } from 'lucide-react';
+import { Clock, Home, XCircle, Lightbulb } from 'lucide-react';
 import type { Difficulty } from '../utils/generator';
 
 interface HeaderProps {
@@ -6,7 +6,7 @@ interface HeaderProps {
   timerFormatted: string;
   mistakeCount: number;
   hintCount: number;
-  onNewGame: () => void;
+  onHome: () => void;
 }
 
 const DIFFICULTY_LABEL: Record<Difficulty, string> = {
@@ -15,7 +15,7 @@ const DIFFICULTY_LABEL: Record<Difficulty, string> = {
   hard: '上級',
 };
 
-export default function Header({ difficulty, timerFormatted, mistakeCount, hintCount, onNewGame }: HeaderProps) {
+export default function Header({ difficulty, timerFormatted, mistakeCount, hintCount, onHome }: HeaderProps) {
   return (
     <div className="w-full bg-slate-800/80 pt-2 pb-1">
       {/* Safe area spacer for iPhone notch/Dynamic Island */}
@@ -23,19 +23,21 @@ export default function Header({ difficulty, timerFormatted, mistakeCount, hintC
 
       {/* Title row */}
       <div className="flex items-center justify-between px-4 py-1">
+        <button
+          onClick={onHome}
+          className="flex items-center gap-1.5 text-slate-400 text-sm active:text-white px-2 py-1 rounded-lg"
+        >
+          <Home size={16} />
+          <span className="text-xs">ホーム</span>
+        </button>
         <h1 className="text-lg font-bold text-white tracking-wide">
           数独
           <span className="text-xs font-normal text-slate-400 ml-2">
             {DIFFICULTY_LABEL[difficulty]}
           </span>
         </h1>
-        <button
-          onClick={onNewGame}
-          className="flex items-center gap-1.5 text-slate-400 text-sm active:text-white px-2 py-1 rounded-lg"
-        >
-          <RotateCcw size={16} />
-          <span className="text-xs">新規</span>
-        </button>
+        {/* Spacer for centering */}
+        <div className="w-16" />
       </div>
 
       {/* Stats row */}

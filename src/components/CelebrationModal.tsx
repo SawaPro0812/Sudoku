@@ -7,7 +7,7 @@ interface CelebrationModalProps {
   difficulty: Difficulty;
   mistakeCount: number;
   hintCount: number;
-  onNewGame: () => void;
+  onHome: () => void;
 }
 
 const DIFFICULTY_LABEL: Record<Difficulty, string> = {
@@ -18,8 +18,7 @@ const DIFFICULTY_LABEL: Record<Difficulty, string> = {
 
 const CONFETTI_COLORS = ['#fbbf24', '#f87171', '#34d399', '#60a5fa', '#a78bfa', '#fb923c'];
 
-export default function CelebrationModal({ timerFormatted, difficulty, mistakeCount, hintCount, onNewGame }: CelebrationModalProps) {
-  // Memoize confetti so it doesn't re-randomize on every render
+export default function CelebrationModal({ timerFormatted, difficulty, mistakeCount, hintCount, onHome }: CelebrationModalProps) {
   const confetti = useMemo(() =>
     Array.from({ length: 30 }).map((_, i) => ({
       left: `${Math.random() * 100}%`,
@@ -33,7 +32,6 @@ export default function CelebrationModal({ timerFormatted, difficulty, mistakeCo
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
-      {/* Confetti */}
       {confetti.map((c, i) => (
         <div
           key={i}
@@ -79,10 +77,10 @@ export default function CelebrationModal({ timerFormatted, difficulty, mistakeCo
         </div>
 
         <button
-          onClick={onNewGame}
+          onClick={onHome}
           className="w-full py-3 rounded-xl bg-indigo-600 active:bg-indigo-500 text-white font-semibold text-lg"
         >
-          新しいゲーム
+          ホームに戻る
         </button>
       </div>
     </div>

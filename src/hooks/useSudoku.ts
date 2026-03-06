@@ -14,49 +14,46 @@ export function useSudoku() {
   const [isMemoMode, setIsMemoMode] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [errors, setErrors] = useState<boolean[][]>(Array.from({ length: 9 }, () => Array(9).fill(false)));
-  const [gameStarted, setGameStarted] = useState(false);
+  const [gameActive, setGameActive] = useState(false);
   const [mistakeCount, setMistakeCount] = useState(0);
   const [hintCount, setHintCount] = useState(0);
   const timer = useTimer(0);
-  const initialized = useRef(false);
-
-  // Load saved game on mount
-  useEffect(() => {
-    if (initialized.current) return;
-    initialized.current = true;
-
-    const saved = loadGame();
-    if (saved) {
-      setPuzzle(saved.puzzle);
-      setSolution(saved.solution);
-      setUserBoard(saved.userBoard);
-      setMemos(saved.memos);
-      setDifficulty(saved.difficulty);
-      setSelectedCell(saved.selectedCell);
-      setIsComplete(saved.isComplete);
-      setErrors(findErrors(saved.userBoard));
-      setMistakeCount(saved.mistakeCount);
-      setHintCount(saved.hintCount);
-      setGameStarted(true);
-      if (!saved.isComplete) {
-        timer.reset(saved.elapsedSeconds);
-        setTimeout(() => timer.start(), 0);
-      } else {
-        timer.reset(saved.elapsedSeconds);
-      }
-    }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const autoSaveEnabled = useRef(false);
 
   // Auto-save
   useEffect(() => {
-    if (!gameStarted || puzzle.length === 0) return;
+    if (!autoSaveEnabled.current || puzzle.length === 0) return;
     const state: GameState = {
       puzzle, solution, userBoard, memos, difficulty,
       elapsedSeconds: timer.seconds, selectedCell, isComplete,
       mistakeCount, hintCount,
     };
     saveGame(state);
-  }, [puzzle, solution, userBoard, memos, difficulty, timer.seconds, selectedCell, isComplete, gameStarted, mistakeCount, hintCount]);
+  }, [puzzle, solution, userBoard, memos, difficulty, timer.seconds, selectedCell, isComplete, mistakeCount, hintCount]);
+
+  const resumeGame = useCallback(() => {
+    const saved = loadGame();
+    if (!saved) return;
+
+    setPuzzle(saved.puzzle);
+    setSolution(saved.solution);
+    setUserBoard(saved.userBoard);
+    setMemos(saved.memos);
+    setDifficulty(saved.difficulty);
+    setSelectedCell(saved.selectedCell);
+    setIsComplete(saved.isComplete);
+    setErrors(findErrors(saved.userBoard));
+    setMistakeCount(saved.mistakeCount);
+    setHintCount(saved.hintCount);
+    setGameActive(true);
+    autoSaveEnabled.current = true;
+    if (!saved.isComplete) {
+      timer.reset(saved.elapsedSeconds);
+      setTimeout(() => timer.start(), 0);
+    } else {
+      timer.reset(saved.elapsedSeconds);
+    }
+  }, [timer]);
 
   const newGame = useCallback((diff: Difficulty) => {
     const { puzzle: p, solution: s } = generatePuzzle(diff);
@@ -75,11 +72,27 @@ export function useSudoku() {
     setErrors(Array.from({ length: 9 }, () => Array(9).fill(false)));
     setMistakeCount(0);
     setHintCount(0);
-    setGameStarted(true);
+    setGameActive(true);
+    autoSaveEnabled.current = true;
     clearSave();
     timer.reset(0);
     setTimeout(() => timer.start(), 0);
   }, [timer]);
+
+  const pauseGame = useCallback(() => {
+    timer.stop();
+    // Save current state before going home
+    if (puzzle.length > 0) {
+      const state: GameState = {
+        puzzle, solution, userBoard, memos, difficulty,
+        elapsedSeconds: timer.seconds, selectedCell, isComplete,
+        mistakeCount, hintCount,
+      };
+      saveGame(state);
+    }
+    setGameActive(false);
+    autoSaveEnabled.current = false;
+  }, [puzzle, solution, userBoard, memos, difficulty, timer, selectedCell, isComplete, mistakeCount, hintCount]);
 
   const selectCell = useCallback((row: number, col: number) => {
     if (isComplete) return;
@@ -104,7 +117,6 @@ export function useSudoku() {
         return next;
       });
     } else {
-      // Check if the number is wrong (compared to solution)
       if (num !== solution[r][c]) {
         setMistakeCount(prev => prev + 1);
       }
@@ -185,7 +197,7 @@ export function useSudoku() {
 
   return {
     puzzle, userBoard, memos, difficulty, selectedCell, isMemoMode,
-    isComplete, errors, gameStarted, timer, mistakeCount, hintCount,
-    newGame, selectCell, inputNumber, eraseCell, giveHint, toggleMemoMode,
+    isComplete, errors, gameActive, timer, mistakeCount, hintCount,
+    newGame, resumeGame, pauseGame, selectCell, inputNumber, eraseCell, giveHint, toggleMemoMode,
   };
 }
