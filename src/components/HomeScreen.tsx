@@ -19,33 +19,33 @@ export default function HomeScreen({ hasSavedGame, onNewGame, onContinue }: Home
 
         <div className="flex flex-col gap-3 w-full max-w-xs">
           <button
-            onClick={onContinue}
-            disabled={!hasSavedGame}
-            className={`w-full py-4 px-6 rounded-2xl border text-left transition-colors flex items-center gap-4 ${
-              hasSavedGame
-                ? 'bg-indigo-600 border-indigo-500 active:bg-indigo-500'
-                : 'bg-slate-800/40 border-slate-700/50 opacity-40 cursor-not-allowed'
-            }`}
+            onClick={onNewGame}
+            className="w-full py-4 px-6 rounded-2xl bg-indigo-600 border border-indigo-500 active:bg-indigo-500 text-left transition-colors flex items-center gap-4"
           >
-            <Play size={24} className={hasSavedGame ? 'text-white' : 'text-slate-500'} />
+            <PlusCircle size={24} className="text-white" />
             <div>
-              <span className={`font-semibold text-lg ${hasSavedGame ? 'text-white' : 'text-slate-500'}`}>
-                続きから
-              </span>
-              <span className={`block text-sm mt-0.5 ${hasSavedGame ? 'text-indigo-200' : 'text-slate-600'}`}>
-                {hasSavedGame ? '前回の続きを再開' : 'セーブデータなし'}
-              </span>
+              <span className="text-white font-semibold text-lg">新規ゲーム</span>
+              <span className="block text-indigo-200 text-sm mt-0.5">難易度を選んで開始</span>
             </div>
           </button>
 
           <button
-            onClick={onNewGame}
-            className="w-full py-4 px-6 rounded-2xl bg-slate-800 border border-slate-700 active:bg-slate-700 text-left transition-colors flex items-center gap-4"
+            onClick={onContinue}
+            disabled={!hasSavedGame}
+            className={`w-full py-4 px-6 rounded-2xl border text-left transition-colors flex items-center gap-4 ${
+              hasSavedGame
+                ? 'bg-slate-800 border-slate-700 active:bg-slate-700'
+                : 'bg-slate-800/40 border-slate-700/50 opacity-40 cursor-not-allowed'
+            }`}
           >
-            <PlusCircle size={24} className="text-slate-300" />
+            <Play size={24} className={hasSavedGame ? 'text-slate-300' : 'text-slate-500'} />
             <div>
-              <span className="text-white font-semibold text-lg">新規ゲーム</span>
-              <span className="block text-slate-400 text-sm mt-0.5">難易度を選んで開始</span>
+              <span className={`font-semibold text-lg ${hasSavedGame ? 'text-white' : 'text-slate-500'}`}>
+                続きから
+              </span>
+              <span className={`block text-sm mt-0.5 ${hasSavedGame ? 'text-slate-400' : 'text-slate-600'}`}>
+                {hasSavedGame ? '前回の続きを再開' : 'セーブデータなし'}
+              </span>
             </div>
           </button>
         </div>

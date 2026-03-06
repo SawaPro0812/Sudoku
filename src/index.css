@@ -39,26 +39,25 @@ body {
   animation: confetti-fall 3s ease-in forwards;
 }
 
-/* 数独盤面のグリッド線 */
-.sudoku-grid {
-  border-collapse: collapse;
+/* 数独盤面: 3x3ブロックのネスト構造 */
+.sudoku-outer {
   display: grid;
-  grid-template-columns: repeat(9, 1fr);
-  grid-template-rows: repeat(9, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
   aspect-ratio: 1;
   border: 2px solid #94a3b8;
+  gap: 0;
+}
+
+.sudoku-block {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  border: 1px solid #94a3b8;
   gap: 0;
 }
 
 .sudoku-cell {
   border: 0.5px solid #475569;
   position: relative;
-}
-
-/* 3x3ブロックの太い罫線 */
-.sudoku-cell.border-right-thick {
-  border-right: 2px solid #94a3b8;
-}
-.sudoku-cell.border-bottom-thick {
-  border-bottom: 2px solid #94a3b8;
 }

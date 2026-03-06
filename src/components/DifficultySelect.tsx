@@ -1,4 +1,4 @@
-import { ChevronLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import type { Difficulty } from '../utils/generator';
 
 interface DifficultySelectProps {
@@ -18,10 +18,10 @@ export default function DifficultySelect({ onSelect, onBack }: DifficultySelectP
       <div className="pt-4" style={{ paddingTop: 'max(1rem, env(safe-area-inset-top))' }}>
         <button
           onClick={onBack}
-          className="flex items-center gap-1 text-slate-400 active:text-white text-sm py-2"
+          className="flex items-center gap-2 text-indigo-400 active:text-indigo-300 text-sm py-2 px-1 rounded-lg"
         >
-          <ChevronLeft size={20} />
-          <span>戻る</span>
+          <ArrowLeft size={18} />
+          <span className="font-medium">ホーム</span>
         </button>
       </div>
 
